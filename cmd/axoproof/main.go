@@ -194,10 +194,10 @@ func runCheckSeal(args []string) {
 func computeVerdict(fatal []model.Finding, polish []model.Finding, probeOut probes.Outcome) (model.VerdictStatus, string, string, string, string) {
 	if len(fatal) > 0 {
 		return model.VerdictHoldRelease,
-			"STOP: PLACEBO OR BUSINESS RISK DETECTED",
-			"TAHAN RILIS: DITEMUKAN FITUR PALSU ATAU RISIKO BISNIS",
-			fmt.Sprintf("AxoProof caught %d critical defect(s) that could lose customer data, miscalculate money, or fake completion. Tell your AI agent to run the repair brief below.", len(fatal)),
-			fmt.Sprintf("AxoProof menangkap %d masalah fatal (fitur pajangan, hitungan uang rawan meleset, atau pintu data terbuka). Minta AI Agent menjalankan instruksi perbaikan di bagian bawah struk.", len(fatal))
+			"Hold release until blocking defects are fixed",
+			"Tahan rilis sebelum masalah utama dibereskan",
+			fmt.Sprintf("AxoProof found %d issue(s) that could lose orders, miscalculate money, or expose private records. Click the button below to copy repair instructions for your AI agent.", len(fatal)),
+			fmt.Sprintf("AxoProof menemukan %d masalah yang bisa menghilangkan pesanan, melesetkan hitungan uang, atau membuka data pelanggan. Klik tombol di bawah untuk menyalin perintah perbaikan ke AI Agent.", len(fatal))
 	}
 
 	hasPersistenceProof := false
@@ -214,23 +214,23 @@ func computeVerdict(fatal []model.Finding, polish []model.Finding, probeOut prob
 	if allProbesPassed && hasPersistenceProof {
 		if len(polish) > 0 {
 			return model.VerdictSafeToTest,
-				"SAFE TO TEST WITH REAL CUSTOMERS (WITH MINOR POLISH NOTES)",
-				"AMAN DITES KE PELANGGAN (DENGAN CATATAN POLESAN TAMPILAN)",
-				fmt.Sprintf("Core logic, doors, and live database writes passed verification. %d customer-screen polish item(s) are listed separately below.", len(polish)),
-				fmt.Sprintf("Simpan database nyata, kasir, dan kunci pintu terbukti aman. Ada %d catatan kerapian tampilan/bahasa di kotak nomor 3.", len(polish))
+				"Verified live, with screen polish notes",
+				"Terbukti jalan nyata, dengan catatan kerapian layar",
+				fmt.Sprintf("Database writes, pricing rules, and login locks passed live checks. %d customer-screen note(s) are listed in section 03.", len(polish)),
+				fmt.Sprintf("Simpan database nyata, aturan harga, dan kunci login lulus uji langsung. Ada %d catatan kerapian layar di bagian 03.", len(polish))
 		}
 		return model.VerdictSafeToTest,
-			"SAFE TO TEST WITH REAL CUSTOMERS",
-			"TERBUKTI JALAN & AMAN DITES KE PELANGGAN",
-			"Code inspection and live database/door probes passed with concrete runtime evidence.",
-			"Pemeriksaan kode, kunci pintu login, dan simpan database secara live telah terbukti berjalan nyata."
+			"Verified live and ready for customer testing",
+			"Terbukti jalan nyata dan siap diuji ke pelanggan",
+			"Every inspected code path, login lock, and live database row count passed independent measurement.",
+			"Pemeriksaan kode, kunci pintu login, dan pertambahan isi database telah terbukti langsung oleh mesin."
 	}
 
 	return model.VerdictLocalOnlyManualCheck,
-		"CODE CLEAN, LIVE ACTION STILL NEEDS CHECK",
-		"KODE BERSIH, TETAP WAJIB TES JALAN LANGSUNG 2 MENIT",
-		"Zero fatal static defects found, but live server/database persistence was not fully probed yet. Review the 2-minute owner checklist below.",
-		"Tidak ditemukan kode palsu atau celah fatal pada file, tetapi uji simpan database secara live belum dijalankan penuh. Cek daftar 2 menit di bawah."
+		"Source code clean, live database check pending",
+		"Kode bersih, menunggu uji simpan database langsung",
+		"No static defects were found, while live server/database row counts have not been measured yet. Review section 04 before launch.",
+		"Tidak ditemukan kode palsu atau celah statis, namun pertambahan baris database belum diukur secara live. Cek bagian 04 sebelum rilis."
 }
 
 func buildBlindspots(m claims.Manifest, probeOut probes.Outcome) []model.BlindspotItem {

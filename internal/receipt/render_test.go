@@ -16,8 +16,8 @@ func TestReceiptSealDetectsTamperingAndRendersBilingualHTML(t *testing.T) {
 		GeneratedAtUTC: "2026-11-27T10:00:00Z",
 		GitCommit:      "abc1234",
 		Verdict:        model.VerdictSafeToTest,
-		HeadlineEN:     "SAFE TO TEST WITH REAL CUSTOMERS",
-		HeadlineID:     "TERBUKTI JALAN & AMAN DITES KE PELANGGAN",
+		HeadlineEN:     "Verified live and ready for customer testing",
+		HeadlineID:     "Terbukti jalan nyata dan siap diuji ke pelanggan",
 		SubheadlineEN:  "All checks passed.",
 		SubheadlineID:  "Semua pemeriksaan lulus.",
 		FilesScanned:   8,
@@ -42,7 +42,7 @@ func TestReceiptSealDetectsTamperingAndRendersBilingualHTML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("RenderHTML error: %v", err)
 	}
-	if htmlPath == "" || !strings.Contains(htmlStr, `data-lang="id"`) || !strings.Contains(htmlStr, "TERBUKTI JALAN") {
+	if htmlPath == "" || !strings.Contains(htmlStr, `data-lang="id"`) || !strings.Contains(htmlStr, "Terbukti jalan nyata") {
 		t.Fatalf("expected bilingual HTML output containing Indonesian headline")
 	}
 }

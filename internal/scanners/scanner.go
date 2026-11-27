@@ -2,6 +2,7 @@ package scanners
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -384,7 +385,34 @@ func ScanWorkspace(workDir string) (ScanSummary, error) {
 		return nil
 	})
 
+	out.FatalRisks = deduplicateByFileAndRule(out.FatalRisks)
+	out.PolishWarnings = deduplicateByFileAndRule(out.PolishWarnings)
 	return out, err
+}
+
+func deduplicateByFileAndRule(items []model.Finding) []model.Finding {
+	if len(items) <= 1 {
+		return items
+	}
+	type key struct {
+		id   string
+		file string
+	}
+	indexByKey := map[key]int{}
+	counts := map[key]int{}
+	var collapsed []model.Finding
+
+	for _, it := range items {
+		k := key{id: it.ID, file: it.File}
+		counts[k]++
+		if idx, exists := indexByKey[k]; exists {
+			collapsed[idx].RepairInstruction = fmt.Sprintf("%s (occurs %d times in %s)", it.RepairInstruction, counts[k], it.File)
+			continue
+		}
+		indexByKey[k] = len(collapsed)
+		collapsed = append(collapsed, it)
+	}
+	return collapsed
 }
 
 func truncateSnippet(s string) string {
