@@ -1,0 +1,43 @@
+{
+  "project_name": "Verified Coffee Roastery Checkout",
+  "summary": "Server-validated integer-Rupiah checkout with SQLite persistence and locked customer order history.",
+  "base_url": "http://127.0.0.1:18090",
+  "health_path": "/api/health",
+  "touches_money": true,
+  "touches_auth": true,
+  "persistence": [
+    {
+      "name": "Submitting checkout order saves a real row in orders table",
+      "method": "POST",
+      "path": "/api/orders",
+      "payload_json": "{\"sku\":\"COFFEE-BEAN-1KG\",\"quantity\":2}",
+      "sqlite_path": "./verified_store.db",
+      "table": "orders",
+      "expect_min_delta": 1
+    }
+  ],
+  "protected_routes": [
+    {
+      "name": "Customer order history blocks unauthenticated visitors",
+      "method": "GET",
+      "path": "/api/customers/orders"
+    }
+  ],
+  "money_tampers": [
+    {
+      "name": "Checkout rejects negative quantity exploit",
+      "method": "POST",
+      "path": "/api/orders",
+      "tampered_body_json": "{\"sku\":\"COFFEE-BEAN-1KG\",\"quantity\":-5}",
+      "sqlite_path": "./verified_store.db",
+      "table": "orders"
+    }
+  ],
+  "external_deps": [
+    {
+      "service": "Live QRIS / Bank Settlement Callback",
+      "note_en": "Complete one real test payment on staging before launching ads.",
+      "note_id": "Lakukan 1 pembayaran kecil nyata di server staging sebelum menyalakan iklan."
+    }
+  ]
+}

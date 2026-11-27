@@ -1,0 +1,43 @@
+{
+  "project_name": "Sabotaged Vibe-Coded Checkout Demo",
+  "summary": "Online store checkout & owner revenue dashboard built rapidly by an AI coding agent.",
+  "base_url": "http://127.0.0.1:18089",
+  "health_path": "/api/health",
+  "touches_money": true,
+  "touches_auth": true,
+  "persistence": [
+    {
+      "name": "Submitting checkout order saves a real row in orders table",
+      "method": "POST",
+      "path": "/api/orders",
+      "payload_json": "{\"sku\":\"COFFEE-BEAN-1KG\",\"quantity\":2,\"price\":125000}",
+      "sqlite_path": "./store.db",
+      "table": "orders",
+      "expect_min_delta": 1
+    }
+  ],
+  "protected_routes": [
+    {
+      "name": "Customer order history blocks unauthenticated visitors",
+      "method": "GET",
+      "path": "/api/customers/orders"
+    }
+  ],
+  "money_tampers": [
+    {
+      "name": "Checkout rejects negative quantity and Rp 1 price tamper",
+      "method": "POST",
+      "path": "/api/orders",
+      "tampered_body_json": "{\"sku\":\"COFFEE-BEAN-1KG\",\"quantity\":-5,\"price\":1}",
+      "sqlite_path": "./store.db",
+      "table": "orders"
+    }
+  ],
+  "external_deps": [
+    {
+      "service": "Live QRIS / Stripe Bank Settlement",
+      "note_en": "Run one real small payment on staging before turning on paid traffic.",
+      "note_id": "Lakukan 1 pembayaran kecil nyata di server staging sebelum menyalakan iklan berbayar."
+    }
+  ]
+}

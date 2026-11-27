@@ -1,0 +1,19 @@
+# Binaries & build artifacts
+/axoproof
+/axoproof-*
+/dist/
+*.exe
+*.test
+*.out
+
+# Generated verification receipts & runtime SQLite databases
+/.axoproof/
+.axoproof/receipt.json
+.axoproof/RECEIPT.html
+*.db
+*.db-shm
+*.db-wal
+
+# OS files
+.DS_Store
+Thumbs.db
