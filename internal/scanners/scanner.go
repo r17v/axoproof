@@ -259,10 +259,10 @@ func ScanWorkspaceFiltered(workDir string, allowedRelPaths map[string]bool) (Sca
 					Line:             lineNo,
 					TitleEN:          "Money calculation uses imprecise decimal floating-point numbers",
 					TitleID:          "Hitungan uang memakai tipe angka desimal (float) yang rawan selisih",
-					BusinessImpactEN: "Invoices, discounts, taxes, or balances can silently lose or add cents/Rupiah on repeated transactions.",
-					BusinessImpactID: "Tagihan, diskon, pajak, atau saldo bisa meleset beberapa perak/rupiah saat transaksi dijumlahkan.",
-					EvidenceSnippet:  truncateSnippet(trimmed),
-					RepairInstruction: "Store and compute all monetary values as integer minor units (int64 cents/Rupiah) or exact SQL NUMERIC/DECIMAL in " + rel + ".",
+					BusinessImpactEN:  "Invoices, discounts, taxes, or balances can silently lose or add cents on repeated transactions.",
+					BusinessImpactID:  "Tagihan, diskon, pajak, atau saldo bisa meleset beberapa perak/rupiah saat transaksi dijumlahkan.",
+					EvidenceSnippet:   truncateSnippet(trimmed),
+					RepairInstruction: "Store and compute all monetary values as integer minor units (int64 cents) or exact SQL NUMERIC/DECIMAL in " + rel + ".",
 				})
 			}
 			if reClientPrice.MatchString(line) && (strings.Contains(strings.ToLower(rel), "order") || strings.Contains(strings.ToLower(rel), "checkout") || strings.Contains(strings.ToLower(rel), "pay") || strings.Contains(strings.ToLower(rel), "cart") || ext == ".go" || ext == ".ts" || ext == ".py") {
@@ -274,7 +274,7 @@ func ScanWorkspaceFiltered(workDir string, allowedRelPaths map[string]bool) (Sca
 					Line:             lineNo,
 					TitleEN:          "Checkout trusts item price sent directly from the buyer's browser",
 					TitleID:          "Kasir mempercayai harga barang yang dikirim dari browser pembeli",
-					BusinessImpactEN: "A buyer can edit browser request data and purchase expensive items for Rp 1 or $0.01.",
+					BusinessImpactEN:  "A buyer can edit browser request data and purchase expensive items for $0.01.",
 					BusinessImpactID: "Pembeli nakal bisa mengubah harga barang dari browser menjadi Rp 1 saat checkout.",
 					EvidenceSnippet:  truncateSnippet(trimmed),
 					RepairInstruction: "Never trust client-submitted price fields in " + rel + "; look up authoritative unit prices from the server database by item SKU/ID.",

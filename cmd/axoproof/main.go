@@ -263,8 +263,8 @@ func buildBlindspots(m claims.Manifest, probeOut probes.Outcome) []model.Blindsp
 		})
 	}
 	list = append(list, model.BlindspotItem{
-		TitleEN: "Real bank/QRIS/Stripe settlement & business offer accuracy",
-		TitleID: "Uang masuk rekening asli (QRIS/Bank/Stripe) & kesesuaian harga bisnis",
+		TitleEN: "Real bank/Stripe settlement & business offer accuracy",
+		TitleID: "Uang masuk rekening asli (Bank/Stripe/QRIS) & kesesuaian harga bisnis",
 		WhyEN:   "Automated local probes never move real bank funds; always confirm one live payment and verify your real product pricing before public ads.",
 		WhyID:   "Pengujian lokal tidak memindahkan uang bank asli; selalu tes 1 pembayaran kecil nyata dan pastikan daftar harga sesuai katalog asli Anda.",
 	})

@@ -8,7 +8,7 @@ Never hand the owner a painted facade that looks finished on screen while doing 
 | :--- | :--- |
 | `<button onClick={() => toast("Saved!")}>` or `onClick={() => {}}` | Disable button while pending, send `POST`/`PATCH` to real route, show toast ONLY after `2xx` response, and refresh persisted state. |
 | `setTimeout(() => setSuccess(true), 800)` | Await real database/API write; surface clear human error state if network or validation fails. |
-| Hardcoded dashboard KPIs (`Rp 18.500.000`, `const mockOrders = [...]`) | Query `SUM(...)` / `COUNT(...)` from real database tables; render `Rp 0` or an honest empty state when zero rows exist. |
+| Hardcoded dashboard KPIs (`$18,500.00`, `const mockOrders = [...]`) | Query `SUM(...)` / `COUNT(...)` from real database tables; render `$0.00` or an honest empty state when zero rows exist. |
 | Silencing broken tests with `it.skip(...)` or `t.Skip()` | Fix the underlying handler/schema defect or update the outdated fixture so the test runs and passes cleanly. |
 
 ## Pre-Delivery Check

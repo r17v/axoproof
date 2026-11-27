@@ -1,6 +1,6 @@
 {
   "project_name": "Sabotaged Vibe-Coded Checkout Demo",
-  "summary": "Online store checkout & owner revenue dashboard built rapidly by an AI coding agent.",
+  "summary": "Online store checkout and owner revenue dashboard built rapidly by an AI coding agent.",
   "base_url": "http://127.0.0.1:18089",
   "start_command": "go run ./server.go",
   "health_path": "/api/health",
@@ -12,7 +12,7 @@
       "name": "Submitting checkout order saves a real row in orders table",
       "method": "POST",
       "path": "/api/orders",
-      "payload_json": "{\"sku\":\"COFFEE-BEAN-1KG\",\"quantity\":2,\"price\":125000}",
+      "payload_json": "{\"sku\":\"COFFEE-BEAN-1KG\",\"quantity\":2,\"price\":24.50}",
       "sqlite_path": "./store.db",
       "table": "orders",
       "expect_min_delta": 1
@@ -27,19 +27,19 @@
   ],
   "money_tampers": [
     {
-      "name": "Checkout rejects negative quantity and Rp 1 price tamper",
+      "name": "Checkout rejects negative quantity and $0.01 price tamper",
       "method": "POST",
       "path": "/api/orders",
-      "tampered_body_json": "{\"sku\":\"COFFEE-BEAN-1KG\",\"quantity\":-5,\"price\":1}",
+      "tampered_body_json": "{\"sku\":\"COFFEE-BEAN-1KG\",\"quantity\":-5,\"price\":0.01}",
       "sqlite_path": "./store.db",
       "table": "orders"
     }
   ],
   "external_deps": [
     {
-      "service": "Live QRIS / Stripe Bank Settlement",
+      "service": "Live Stripe Webhook Settlement",
       "note_en": "Run one real small payment on staging before turning on paid traffic.",
-      "note_id": "Lakukan 1 pembayaran kecil nyata di server staging sebelum menyalakan iklan berbayar."
+      "note_id": "Run one real small payment on staging before turning on paid traffic."
     }
   ]
 }

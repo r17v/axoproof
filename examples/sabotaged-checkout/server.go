@@ -12,13 +12,13 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-// Intentionally sabotaged demo checkout server showcasing the 5 classic AI "vibe-coding" traps
+// Intentionally sabotaged demo checkout server showcasing the classic AI "vibe-coding" traps
 // caught automatically by AxoProof:
 // 1. Float64 currency rounding + trusting client-submitted price directly
 // 2. Ghost checkout handler (returns 200 OK "paid" WITHOUT inserting a row into SQLite!)
 // 3. Unlocked customer data route (/api/customers/orders returns 200 OK with PII without login!)
 // 4. Negative quantity exploit accepted on /api/orders
-// 5. Dashboard HTML with hardcoded fake revenue ("Rp 18.500.000"), example.com, href="#", & brochure slop
+// 5. Dashboard HTML with hardcoded fake revenue ("$18,500.00"), example.com, href="#", & brochure slop
 
 type OrderInput struct {
 	SKU      string  `json:"sku"`
@@ -71,7 +71,7 @@ func main() {
 	// TRAP 3: Sensitive customer endpoint with zero authentication check!
 	mux.HandleFunc("/api/customers/orders", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"orders":[{"customer":"Budi","phone":"0811992233","item":"VIP Package"}]}`))
+		_, _ = w.Write([]byte(`{"orders":[{"customer":"Alice Morgan","email":"alice@client.test","item":"Annual Pro Plan"}]}`))
 	})
 
 	log.Printf("Sabotaged demo store listening on %s", addr)

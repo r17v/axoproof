@@ -1,6 +1,6 @@
 ---
 name: axoproof
-description: "Independent runtime proof, money/privacy safety inspector, structural anti-slop filter, and SHA-256 sealed plain-language Owner Receipt engine (EN/ID) built for non-IT founders, agencies, and AI coding agents. Pairs natively with Axoloom."
+description: "Independent runtime proof, money/privacy safety inspector, structural anti-slop filter, and SHA-256 sealed plain-language Owner Receipt engine built for non-IT founders, agencies, and AI coding agents. Pairs natively with Axoloom."
 license: MIT
 ---
 

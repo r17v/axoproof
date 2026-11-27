@@ -4,7 +4,7 @@
 
 <h3 align="center">
   Independent Runtime Proof, Money/Privacy Inspector, Structural Anti-Slop Filter,<br>
-  and SHA-256 Sealed Owner Receipt (<code>EN / ID</code>) for AI Coding Agents.
+  and SHA-256 Sealed Owner Receipt for AI Coding Agents.
 </h3>
 
 <p align="center">
@@ -22,7 +22,7 @@
 
 AI coding agents routinely tell non-technical founders, agency owners, and busy builders *"Done! Build passed!"* while leaving behind hidden landmines:
 
-- **Placebo Interfaces:** Buttons that show a green success toast while saving `0` rows to the database, or dashboard cards showing hardcoded sample revenue (`Rp 18.500.000`).
+- **Placebo Interfaces:** Buttons that show a green success toast while saving `0` rows to the database, or dashboard cards showing hardcoded sample revenue (`$18,500.00`).
 - **Cash-Register Bugs:** Floating-point rounding errors on currency, negative-quantity exploits (`quantity: -5`), or checkout routes that trust item prices sent directly from the buyer's browser.
 - **Unlocked Customer Doors:** Sensitive `/api/customers` or `/api/orders` endpoints left open without authentication, or secret keys leaked into `NEXT_PUBLIC_*` / `VITE_*` client bundles.
 - **Customer-Screen AI Slop:** Leftover `example.com` contacts, dead `href="#"` links, raw `500` stack traces shown to customers, and stiff brochure cliches.
@@ -35,7 +35,7 @@ An AI coding agent grading its own work has a conflict of interest. **AxoProof**
 
 `Axoloom` and `AxoProof` form a closed quality loop across your workspace:
 
-1. **Upstream (`Axoloom` -> `AxoProof`):** Before writing code or copy, the agent loads real business facts, brand voice, and permanent guardrails from `Axoloom` so it never invents generic filler. During verification, `AxoProof` reads `.axoloom/axoloom.db` directly to catch sensitive API routes even if the agent forgot to declare them in `claims.json`.
+1. **Upstream (`Axoloom` -> `AxoProof`):** Before writing code or copy, the agent loads real business facts, brand voice, and permanent guardrails from `Axoloom` so it never invents generic filler. During verification, `AxoProof` reads `.axoloom/index.db` directly to catch sensitive API routes even if the agent forgot to declare them in `claims.json`.
 2. **Downstream (`AxoProof` -> `Axoloom`):** Running `axoproof verify --sync-axoloom` writes the SHA-256 sealed verification outcome back into `Axoloom` handoff memory so future sessions inherit lessons automatically.
 
 ---
@@ -87,13 +87,13 @@ AxoProof automatically starts each demo server via `start_command`, probes live 
 **Catch 7 blocking AI vibe-coding lies red-handed (`HOLD_RELEASE`):**
 
 ```bash
-./axoproof verify --dir ./examples/sabotaged-checkout --lang id || true
+./axoproof verify --dir ./examples/sabotaged-checkout || true
 ```
 
 **Verify the repaired store passing all live DB, auth, tamper, and mobile screen probes (`SAFE_TO_TEST`):**
 
 ```bash
-./axoproof verify --dir ./examples/verified-checkout --lang id
+./axoproof verify --dir ./examples/verified-checkout
 ```
 
 ---

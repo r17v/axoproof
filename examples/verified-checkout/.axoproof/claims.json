@@ -1,6 +1,6 @@
 {
   "project_name": "Verified Coffee Roastery Checkout",
-  "summary": "Server-validated integer-Rupiah checkout with SQLite persistence and locked customer order history.",
+  "summary": "Server-validated integer-cent checkout with SQLite persistence and locked customer order history.",
   "base_url": "http://127.0.0.1:18090",
   "start_command": "go run ./server.go",
   "health_path": "/api/health",
@@ -37,9 +37,9 @@
   ],
   "external_deps": [
     {
-      "service": "Live QRIS / Bank Settlement Callback",
-      "note_en": "Complete one real test payment on staging before launching ads.",
-      "note_id": "Lakukan 1 pembayaran kecil nyata di server staging sebelum menyalakan iklan."
+      "service": "Live Stripe / Card Settlement Callback",
+      "note_en": "Complete one real small payment on staging before launching ads.",
+      "note_id": "Complete one real small payment on staging before launching ads."
     }
   ]
 }

@@ -14,13 +14,13 @@ import (
 )
 
 // Verified production-ready checkout server demonstrating all AxoProof gates passing:
-// 1. Exact int64 Rupiah minor-unit catalog pricing looked up on the server
+// 1. Exact int64 minor-unit (USD cents) catalog pricing looked up on the server
 // 2. Durable SQLite INSERT inside POST /api/orders (rows grow 0 -> 1)
 // 3. Rejects negative/zero quantities with HTTP 400
 // 4. Blocks unauthenticated strangers on GET /api/customers/orders with HTTP 401
 
-var serverCatalogRupiah = map[string]int64{
-	"COFFEE-BEAN-1KG": 125000,
+var serverCatalogCents = map[string]int64{
+	"COFFEE-BEAN-1KG": 2450,
 }
 
 type SafeOrderInput struct {
@@ -44,8 +44,8 @@ func main() {
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		sku TEXT NOT NULL,
 		quantity INTEGER NOT NULL,
-		unit_price_idr INTEGER NOT NULL,
-		total_idr INTEGER NOT NULL
+		unit_price_cents INTEGER NOT NULL,
+		total_cents INTEGER NOT NULL
 	)`)
 	if err != nil {
 		log.Fatal(err)
@@ -76,20 +76,20 @@ func main() {
 			http.Error(w, `{"error":"quantity must be at least 1"}`, http.StatusBadRequest)
 			return
 		}
-		unitPrice, ok := serverCatalogRupiah[in.SKU]
+		unitPrice, ok := serverCatalogCents[in.SKU]
 		if !ok {
 			http.Error(w, `{"error":"item not found in catalog"}`, http.StatusBadRequest)
 			return
 		}
-		totalIDR := unitPrice * in.Quantity
-		if _, err := db.Exec(`INSERT INTO orders (sku, quantity, unit_price_idr, total_idr) VALUES (?, ?, ?, ?)`,
-			in.SKU, in.Quantity, unitPrice, totalIDR); err != nil {
+		totalCents := unitPrice * in.Quantity
+		if _, err := db.Exec(`INSERT INTO orders (sku, quantity, unit_price_cents, total_cents) VALUES (?, ?, ?, ?)`,
+			in.SKU, in.Quantity, unitPrice, totalCents); err != nil {
 			http.Error(w, `{"error":"could not save order"}`, http.StatusInternalServerError)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
-		_, _ = fmt.Fprintf(w, `{"status":"saved","total_idr":%d}`, totalIDR)
+		_, _ = fmt.Fprintf(w, `{"status":"saved","total_cents":%d}`, totalCents)
 	})
 
 	mux.HandleFunc("/api/customers/orders", func(w http.ResponseWriter, r *http.Request) {
