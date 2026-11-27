@@ -52,6 +52,11 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		raw, _ := os.ReadFile(filepath.Join(".", "dashboard.html"))
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		_, _ = w.Write(raw)
+	})
 	mux.HandleFunc("/api/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{"ok":true}`))

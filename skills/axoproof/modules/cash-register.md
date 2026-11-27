@@ -1,8 +1,12 @@
 # Module 2: Cash-Register & Exact Money (`cash-register`)
 
-Treat every price, invoice, wallet, discount, tax split, and inventory count as real business cash:
+Treat every price, invoice, wallet, discount, tax split, and inventory count as real business cash.
 
-1. **Integer Minor Units Only:** Store and calculate currency in integer minor units (`int64` Rupiah / cents) or exact database `NUMERIC` / `DECIMAL`. Never use `float32`, `float64`, `REAL`, `DOUBLE PRECISION`, or `parseFloat` on money.
-2. **Server-Authoritative Pricing:** Checkout and order endpoints must look up unit prices, discounts, and tax rates from the server database by item ID/SKU. Never trust `price`, `total`, or `discount` sent from the client browser.
-3. **Reject Negative & Zero Exploits:** Validate `quantity > 0` and non-negative totals on the server before touching inventory or ledgers, returning HTTP `400` or `422` on invalid payloads.
-4. **Atomic Writes & Idempotency:** Wrap multi-table order + payment/ledger writes inside a single database transaction and guard payment capture endpoints against duplicate double-click submissions.
+## Wrong vs Right Patterns
+
+| Cash-Register Bug (Forbidden) | Exact Ledger Pattern (Required) |
+| :--- | :--- |
+| `price FLOAT` / `float64` / `parseFloat(req.body.price)` | Store & compute integer minor units (`BIGINT` / `int64` Rupiah or cents) or SQL `NUMERIC(18,2)`. Compute splits/tax via integer math with explicit remainder allocation. |
+| `total = req.body.quantity * req.body.price` | Ignore client-submitted prices/discounts. Query authoritative `unit_price` and active promo rules from the server database by `sku` / `product_id`. |
+| Accepting `quantity: 0` or `quantity: -3` | Enforce `quantity >= 1` and `stock >= quantity` (`UPDATE products SET stock = stock - $1 WHERE id = $2 AND stock >= $1`) inside the transaction, returning HTTP `400`/`422` otherwise. |
+| Double charge when customer taps "Pay" twice | Require an `idempotency_key` (`UNIQUE` index on `(user_id, idempotency_key)`) and wrap order + ledger rows in one atomic `BEGIN ... COMMIT` transaction. |

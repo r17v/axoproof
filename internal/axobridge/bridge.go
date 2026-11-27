@@ -121,6 +121,57 @@ func SyncBack(workDir string, receipt model.SealedReceipt) string {
 	return ""
 }
 
+// ExpandBlastRadiusFiles queries Axoloom's edges/nodes graph to include 1-hop upstream caller files
+// for any modified relative file path when running in --scope diff mode.
+func ExpandBlastRadiusFiles(workDir string, relFiles map[string]bool) map[string]bool {
+	if len(relFiles) == 0 {
+		return relFiles
+	}
+	absWork, err := filepath.Abs(workDir)
+	if err != nil {
+		return relFiles
+	}
+	dbPath, _ := locateAxoloomDB(absWork)
+	if dbPath == "" {
+		return relFiles
+	}
+	db, err := sql.Open("sqlite", dbPath+"?_pragma=busy_timeout(5000)&mode=ro")
+	if err != nil {
+		return relFiles
+	}
+	defer db.Close()
+
+	expanded := map[string]bool{}
+	for k := range relFiles {
+		expanded[k] = true
+	}
+
+	for rel := range relFiles {
+		absTarget := filepath.Join(absWork, filepath.FromSlash(rel))
+		rows, qerr := db.Query(`
+			SELECT DISTINCT e.path
+			FROM nodes n
+			JOIN edges e ON (e.dst_id = n.id OR e.dst_name = n.name)
+			WHERE n.path = ? OR n.path LIKE ?
+		`, absTarget, "%/"+rel)
+		if qerr != nil || rows == nil {
+			continue
+		}
+		for rows.Next() {
+			var callerPath string
+			if err := rows.Scan(&callerPath); err == nil && callerPath != "" {
+				if callerRel, rerr := filepath.Rel(absWork, callerPath); rerr == nil && !strings.HasPrefix(callerRel, "..") {
+					expanded[filepath.ToSlash(callerRel)] = true
+				} else if !filepath.IsAbs(callerPath) {
+					expanded[filepath.ToSlash(callerPath)] = true
+				}
+			}
+		}
+		_ = rows.Close()
+	}
+	return expanded
+}
+
 func locateAxoloomDB(startDir string) (string, string) {
 	cur := startDir
 	for i := 0; i < 3; i++ {

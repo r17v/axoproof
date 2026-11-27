@@ -50,4 +50,13 @@ export function Page() {
 	if len(res.PolishWarnings) < 4 {
 		t.Fatalf("expected at least 4 customer-polish warnings (robotic copy, example.com, dead link, tiny button), got %d: %+v", len(res.PolishWarnings), res.PolishWarnings)
 	}
+
+	// Verify --scope diff filtering scans only the allowed file subset
+	diffOnly, err := scanners.ScanWorkspaceFiltered(ws, map[string]bool{"order_controller.ts": true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if diffOnly.FilesScanned != 1 || len(diffOnly.PolishWarnings) != 0 {
+		t.Fatalf("expected diff filter to scan only order_controller.ts (0 UI polish warnings), got %+v", diffOnly)
+	}
 }

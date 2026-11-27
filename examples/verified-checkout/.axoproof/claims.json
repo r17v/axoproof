@@ -2,9 +2,11 @@
   "project_name": "Verified Coffee Roastery Checkout",
   "summary": "Server-validated integer-Rupiah checkout with SQLite persistence and locked customer order history.",
   "base_url": "http://127.0.0.1:18090",
+  "start_command": "go run ./server.go",
   "health_path": "/api/health",
   "touches_money": true,
   "touches_auth": true,
+  "screen_routes": ["/"],
   "persistence": [
     {
       "name": "Submitting checkout order saves a real row in orders table",

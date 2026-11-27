@@ -80,26 +80,20 @@ CGO_ENABLED=0 go build -o ~/.local/bin/axoproof ./cmd/axoproof
 mkdir -p ~/.agents/skills && cp -R ./skills/axoproof ~/.agents/skills/axoproof
 ```
 
-### 2. Try the 5-Second Sabotage vs Verified Demo
+### 2. Try the 1-Command Sabotage vs Verified Demo
 
-**Catch 5 classic AI vibe-coding lies red-handed (`HOLD_RELEASE`):**
+AxoProof automatically starts each demo server via `start_command`, probes live HTTP/SQLite persistence + headless mobile `375px` screen rendering, and shuts the server down cleanly:
+
+**Catch 7 blocking AI vibe-coding lies red-handed (`HOLD_RELEASE`):**
 
 ```bash
-go run ./examples/sabotaged-checkout &
-SRV_PID=$!
-sleep 1
-./axoproof verify --dir ./examples/sabotaged-checkout --lang id --open || true
-kill $SRV_PID
+./axoproof verify --dir ./examples/sabotaged-checkout --lang id || true
 ```
 
-**Verify the repaired store passing all live DB, auth, and tamper probes (`SAFE_TO_TEST`):**
+**Verify the repaired store passing all live DB, auth, tamper, and mobile screen probes (`SAFE_TO_TEST`):**
 
 ```bash
-go run ./examples/verified-checkout &
-SRV_PID=$!
-sleep 1
-./axoproof verify --dir ./examples/verified-checkout --lang id --open
-kill $SRV_PID
+./axoproof verify --dir ./examples/verified-checkout --lang id
 ```
 
 ---
@@ -118,7 +112,7 @@ AxoProof adapts cleanly to where you work without hijacking your screen with uni
 
 ```bash
 axoproof init       [--dir <path>]
-axoproof verify     [--dir <path>] [--claims <path>] [--lang en|id] [--format table|markdown|json] [--sync-axoloom] [--open]
+axoproof verify     [--dir <path>] [--claims <path>] [--scope all|diff] [--lang en|id] [--format table|markdown|json] [--sync-axoloom] [--open]
 axoproof check-seal [--dir <path>] [<receipt.json>]
 axoproof version
 ```

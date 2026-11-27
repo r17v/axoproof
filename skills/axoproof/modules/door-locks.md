@@ -1,8 +1,15 @@
 # Module 3: Door-Locks & Customer Privacy (`door-locks`)
 
-Assume strangers on the public internet will knock on every API route without using your frontend UI:
+Assume strangers on the internet will call every API route directly without touching your frontend UI.
 
-1. **Lock Every Private Endpoint:** Every route reading or mutating customer, patient, order, invoice, wallet, or admin data must enforce session/token authentication on the server and return HTTP `401` or `403` when unauthenticated.
-2. **Enforce Row Ownership (Anti-IDOR):** Never query `WHERE id = $1` alone on user-owned records. Scope queries by the authenticated user or tenant (`WHERE id = $1 AND user_id = $2`).
-3. **Cross-Check Against Axoloom Graph:** When `.axoloom/axoloom.db` is present, `axoproof` automatically inspects all indexed endpoints and probes undeclared sensitive routes without credentials. Declare every protected route in `.axoproof/claims.json`.
-4. **Parameterized SQL & Server-Only Secrets:** Always bind SQL parameters (`$1`, `?`). Never place service-role keys, database passwords, or private API keys in `NEXT_PUBLIC_*`, `VITE_*`, or client bundles.
+## Wrong vs Right Patterns
+
+| Open-Door Vulnerability (Forbidden) | Locked Boundary Pattern (Required) |
+| :--- | :--- |
+| Checking login only in React/Next client router while `/api/customers` has no server check | Verify session/JWT inside every API route, Server Action, or middleware FIRST; return HTTP `401` when unauthenticated. |
+| `SELECT * FROM orders WHERE id = $1` (IDOR leak across customers) | Scope every read/update/delete by owner or tenant: `WHERE id = $1 AND user_id = $2` (or enforce verified Supabase RLS `auth.uid() = user_id` on every table). |
+| String-interpolated SQL (`SELECT ... WHERE email = '${email}'`) | Parameterized queries only (`$1`, `?`, or typed ORM bindings). |
+| `NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY` or `VITE_SECRET_KEY` | Keep service-role keys, payment secrets, and DB URLs strictly in server-only env vars; never serialize full user rows (password hashes, tokens) in JSON responses. |
+
+## Axoloom Anti-Cheat Cross-Check
+When `.axoloom/index.db` exists, `axoproof` automatically discovers all indexed `/api/*` routes and knocks on sensitive endpoints without login. Declare every private endpoint in `.axoproof/claims.json`.

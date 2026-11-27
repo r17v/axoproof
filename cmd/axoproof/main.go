@@ -51,7 +51,7 @@ func printUsage() {
 
 Usage:
   axoproof init       [--dir <path>]
-  axoproof verify     [--dir <path>] [--claims <path>] [--lang en|id] [--format table|markdown|json] [--sync-axoloom] [--open]
+  axoproof verify     [--dir <path>] [--claims <path>] [--scope all|diff] [--lang en|id] [--format table|markdown|json] [--sync-axoloom] [--open]
   axoproof check-seal [--dir <path>] [<receipt.json>]
   axoproof version`)
 }
@@ -73,6 +73,7 @@ func runVerify(args []string) {
 	fs := flag.NewFlagSet("verify", flag.ExitOnError)
 	dir := fs.String("dir", ".", "Workspace directory to verify")
 	claimsPath := fs.String("claims", "", "Optional path to claims.json")
+	scope := fs.String("scope", "all", "Inspection scope: all (entire workspace) or diff (git changed files + Axoloom callers)")
 	lang := fs.String("lang", "en", "Default receipt display language (en or id)")
 	format := fs.String("format", "table", "Output format: table (CLI/Termux), markdown (AI Harness chat), or json")
 	syncAxo := fs.Bool("sync-axoloom", false, "Write sealed verification outcome back to Axoloom handoff memory")
@@ -93,7 +94,15 @@ func runVerify(args []string) {
 		os.Exit(1)
 	}
 
-	scanRes, err := scanners.ScanWorkspace(absDir)
+	var allowedFiles map[string]bool
+	if strings.EqualFold(strings.TrimSpace(*scope), "diff") {
+		diffSet := scanners.ResolveGitDiffFiles(absDir)
+		if len(diffSet) > 0 {
+			allowedFiles = axobridge.ExpandBlastRadiusFiles(absDir, diffSet)
+		}
+	}
+
+	scanRes, err := scanners.ScanWorkspaceFiltered(absDir, allowedFiles)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "scan workspace error: %v\n", err)
 		os.Exit(1)

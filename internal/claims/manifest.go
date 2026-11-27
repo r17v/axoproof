@@ -8,17 +8,20 @@ import (
 	"strings"
 )
 
-// PersistenceClaim declares an end-to-end write action that must change real database rows.
+// PersistenceClaim declares an end-to-end write action proven via SQLite row delta, HTTP Read-Back (Postgres/Supabase/MySQL/API), or both.
 type PersistenceClaim struct {
-	Name            string            `json:"name"`
-	Method          string            `json:"method"`
-	Path            string            `json:"path"`
-	Headers         map[string]string `json:"headers,omitempty"`
-	PayloadJSON     string            `json:"payload_json"`
-	SQLitePath      string            `json:"sqlite_path"`
-	Table           string            `json:"table"`
-	ExpectMinDelta  int               `json:"expect_min_delta"`
-	ExpectStatusMax int               `json:"expect_status_max,omitempty"`
+	Name                string            `json:"name"`
+	Method              string            `json:"method"`
+	Path                string            `json:"path"`
+	Headers             map[string]string `json:"headers,omitempty"`
+	PayloadJSON         string            `json:"payload_json"`
+	SQLitePath          string            `json:"sqlite_path,omitempty"`
+	Table               string            `json:"table,omitempty"`
+	ReadBackPath        string            `json:"read_back_path,omitempty"`
+	ReadHeaders         map[string]string `json:"read_headers,omitempty"`
+	ExpectReadSubstring string            `json:"expect_read_substring,omitempty"`
+	ExpectMinDelta      int               `json:"expect_min_delta"`
+	ExpectStatusMax     int               `json:"expect_status_max,omitempty"`
 }
 
 // ProtectedRouteClaim declares a private endpoint that must reject unauthenticated strangers (401/403).
@@ -30,13 +33,13 @@ type ProtectedRouteClaim struct {
 
 // MoneyTamperClaim declares a transaction endpoint that must reject negative quantities or tampered prices.
 type MoneyTamperClaim struct {
-	Name              string            `json:"name"`
-	Method            string            `json:"method"`
-	Path              string            `json:"path"`
-	Headers           map[string]string `json:"headers,omitempty"`
-	TamperedBodyJSON  string            `json:"tampered_body_json"`
-	SQLitePath        string            `json:"sqlite_path,omitempty"`
-	Table             string            `json:"table,omitempty"`
+	Name             string            `json:"name"`
+	Method           string            `json:"method"`
+	Path             string            `json:"path"`
+	Headers          map[string]string `json:"headers,omitempty"`
+	TamperedBodyJSON string            `json:"tampered_body_json"`
+	SQLitePath       string            `json:"sqlite_path,omitempty"`
+	Table            string            `json:"table,omitempty"`
 }
 
 // ExternalBlindspot lets the agent declare third-party integrations that require a 2-minute human check.
@@ -55,6 +58,7 @@ type Manifest struct {
 	HealthPath      string                `json:"health_path,omitempty"`
 	TouchesMoney    bool                  `json:"touches_money"`
 	TouchesAuth     bool                  `json:"touches_auth"`
+	ScreenRoutes    []string              `json:"screen_routes,omitempty"`
 	Persistence     []PersistenceClaim    `json:"persistence,omitempty"`
 	ProtectedRoutes []ProtectedRouteClaim `json:"protected_routes,omitempty"`
 	MoneyTampers    []MoneyTamperClaim    `json:"money_tampers,omitempty"`
@@ -116,7 +120,7 @@ func Load(workDir string, explicitPath string) (Manifest, bool, error) {
 	return m, true, nil
 }
 
-// WriteTemplate writes a starter .axoproof/claims.json so agents or builders have an immediate schema.
+// WriteTemplate writes a starter .axoproof/claims.json supporting both Postgres/Supabase HTTP read-back and SQLite.
 func WriteTemplate(workDir string) (string, error) {
 	p := DefaultPath(workDir)
 	if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
@@ -127,18 +131,20 @@ func WriteTemplate(workDir string) (string, error) {
 		ProjectName:  filepath.Base(abs),
 		Summary:      "Describe in one plain sentence what feature was built for the business owner.",
 		BaseURL:      "http://127.0.0.1:3000",
+		StartCommand: "npm run start",
 		HealthPath:   "/api/health",
 		TouchesMoney: true,
 		TouchesAuth:  true,
+		ScreenRoutes: []string{"/"},
 		Persistence: []PersistenceClaim{
 			{
-				Name:           "Create order saves a real row in orders table",
-				Method:         "POST",
-				Path:           "/api/orders",
-				PayloadJSON:    `{"sku":"ITEM-01","quantity":1}`,
-				SQLitePath:     "./app.db",
-				Table:          "orders",
-				ExpectMinDelta: 1,
+				Name:                "Create order persists across read-back (Postgres/Supabase/SQLite)",
+				Method:              "POST",
+				Path:                "/api/orders",
+				PayloadJSON:         `{"sku":"ITEM-AXO-01","quantity":1}`,
+				ReadBackPath:        "/api/orders",
+				ExpectReadSubstring: "ITEM-AXO-01",
+				ExpectMinDelta:      1,
 			},
 		},
 		ProtectedRoutes: []ProtectedRouteClaim{
@@ -153,14 +159,12 @@ func WriteTemplate(workDir string) (string, error) {
 				Name:             "Checkout rejects negative quantity exploit",
 				Method:           "POST",
 				Path:             "/api/orders",
-				TamperedBodyJSON: `{"sku":"ITEM-01","quantity":-3,"price":1}`,
-				SQLitePath:       "./app.db",
-				Table:            "orders",
+				TamperedBodyJSON: `{"sku":"ITEM-AXO-01","quantity":-3,"price":1}`,
 			},
 		},
 		ExternalDeps: []ExternalBlindspot{
 			{
-				Service: "Payment Gateway Live Webhook",
+				Service: "Payment Gateway Live Settlement",
 				NoteEN:  "Complete one real small payment on staging/production to confirm bank settlement callbacks.",
 				NoteID:  "Lakukan 1 transaksi kecil nyata di staging/produksi untuk memastikan callback pembayaran masuk.",
 			},

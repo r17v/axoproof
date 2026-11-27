@@ -88,8 +88,14 @@ func isTestFile(rel string) bool {
 		strings.Contains(lower, "\\__tests__\\")
 }
 
-// ScanWorkspace runs deterministic static inspection across supported source files.
+// ScanWorkspace runs deterministic static inspection across all supported source files in workDir.
 func ScanWorkspace(workDir string) (ScanSummary, error) {
+	return ScanWorkspaceFiltered(workDir, nil)
+}
+
+// ScanWorkspaceFiltered inspects all supported files when allowedRelPaths is nil, or restricts inspection
+// strictly to the provided slash-normalized relative file set (used by --scope diff).
+func ScanWorkspaceFiltered(workDir string, allowedRelPaths map[string]bool) (ScanSummary, error) {
 	var out ScanSummary
 	seenRoutes := map[string]bool{}
 
@@ -120,6 +126,10 @@ func ScanWorkspace(workDir string) (ScanSummary, error) {
 			rel = path
 		}
 		rel = filepath.ToSlash(rel)
+
+		if allowedRelPaths != nil && !allowedRelPaths[rel] {
+			return nil
+		}
 
 		// Skip self-scanning AxoProof's own scanner definitions when running inside the axoproof repo itself.
 		if rel == "internal/scanners/scanner.go" || rel == "internal/scanners/scanner_test.go" {

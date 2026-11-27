@@ -99,3 +99,68 @@ func TestCounterfactualProbesCatchGhostWriteAndUnlockedDoors(t *testing.T) {
 		t.Fatalf("expected all probes executed on honest server")
 	}
 }
+
+func TestReadBackPersistenceWorksWithoutSQLiteForPostgresOrSupabaseAPIs(t *testing.T) {
+	ws := t.TempDir()
+
+	// 1. Placebo server: POST returns 201, yet GET /api/orders stays empty!
+	placeboAPI := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/api/health" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+		if r.Method == http.MethodGet {
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"orders":[]}`))
+			return
+		}
+		w.WriteHeader(http.StatusCreated)
+	}))
+	defer placeboAPI.Close()
+
+	m := claims.Manifest{
+		ProjectName: "postgres-api",
+		BaseURL:     placeboAPI.URL,
+		HealthPath:  "/api/health",
+		Persistence: []claims.PersistenceClaim{
+			{
+				Name:                "Order persists via read-back",
+				Method:              "POST",
+				Path:                "/api/orders",
+				PayloadJSON:         `{"sku":"PG-SKU-77","qty":1}`,
+				ReadBackPath:        "/api/orders",
+				ExpectReadSubstring: "PG-SKU-77",
+				ExpectMinDelta:      1,
+			},
+		},
+	}
+
+	bad := probes.RunAll(ws, m, nil, false)
+	if len(bad.FatalFindings) != 1 {
+		t.Fatalf("expected placebo API without real persistence to fail read-back, got %+v", bad.FatalFindings)
+	}
+
+	// 2. Real persisting API: POST appends item so subsequent GET returns PG-SKU-77
+	var items []string
+	realAPI := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/api/health" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+		if r.Method == http.MethodGet {
+			w.Header().Set("Content-Type", "application/json")
+			enc, _ := json.Marshal(map[string]any{"orders": items})
+			_, _ = w.Write(enc)
+			return
+		}
+		items = append(items, "PG-SKU-77")
+		w.WriteHeader(http.StatusCreated)
+	}))
+	defer realAPI.Close()
+
+	m.BaseURL = realAPI.URL
+	good := probes.RunAll(ws, m, nil, false)
+	if len(good.FatalFindings) != 0 {
+		t.Fatalf("expected persisting API to pass read-back proof, got %+v", good.FatalFindings)
+	}
+}
