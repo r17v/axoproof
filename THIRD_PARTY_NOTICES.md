@@ -1,12 +1,12 @@
 # Third-Party Notices
 
-AxoProof is built in pure Go (`CGO_ENABLED=0`) and licensed under the Apache License, Version 2.0.
+AxoProof is built in pure Go (`CGO_ENABLED=0`) and licensed under the MIT License.
 
 ## Runtime Dependencies
 
 1. **`modernc.org/sqlite` (and transitive `modernc.org/*` packages)**
    - License: BSD-3-Clause
-   - Usage: Pure-Go SQLite database driver used for counterfactual before/after database row-delta probes and optional local `.axoloom/axoloom.db` graph inspection.
+   - Usage: Pure-Go SQLite database driver used for counterfactual before/after database row-delta probes and optional local `.axoloom/index.db` graph inspection.
 
 2. **`github.com/google/uuid`**
    - License: BSD-3-Clause

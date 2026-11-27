@@ -1,12 +1,17 @@
-# AxoProof
+<p align="center">
+  <img src="assets/brand/axoproof-horizontal.svg" alt="AxoProof" width="330">
+</p>
 
-**Independent Runtime Proof, Money/Privacy Inspector, Structural Anti-Slop Filter, and SHA-256 Sealed Owner Receipt (`EN / ID`) for AI Coding Agents.**
+<h3 align="center">
+  Independent Runtime Proof, Money/Privacy Inspector, Structural Anti-Slop Filter,<br>
+  and SHA-256 Sealed Owner Receipt (<code>EN / ID</code>) for AI Coding Agents.
+</h3>
 
-<p>
-  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-5C45B9.svg" alt="Apache 2.0 License"></a>
+<p align="center">
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-5C45B9.svg" alt="MIT License"></a>
   <img src="https://img.shields.io/badge/Go-1.26%2B_Pure_Zero--CGo-00ADD8.svg" alt="Pure Go Zero CGo">
   <img src="https://img.shields.io/badge/Skill-1_Door_%2B_6_Auto_Modules-10b981.svg" alt="1 Door Skill + 6 Modules">
-  <img src="https://img.shields.io/badge/Axoloom-2--Way_Graph_Bridge-d97706.svg" alt="Axoloom Compatible">
+  <a href="https://github.com/r17v/axoloom"><img src="https://img.shields.io/badge/Axoloom-2--Way_Graph_Bridge-d97706.svg" alt="Axoloom Compatible"></a>
 </p>
 
 <p align="center">
@@ -125,4 +130,4 @@ axoproof version
 
 ## License
 
-Licensed under the [Apache License, Version 2.0](./LICENSE). Third-party attributions are documented in [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md).
+Licensed under the [MIT License](./LICENSE). Third-party attributions are documented in [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md).
