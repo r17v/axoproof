@@ -45,4 +45,14 @@ func TestReceiptSealDetectsTamperingAndRendersBilingualHTML(t *testing.T) {
 	if htmlPath == "" || !strings.Contains(htmlStr, `data-lang="id"`) || !strings.Contains(htmlStr, "Terbukti jalan nyata") {
 		t.Fatalf("expected bilingual HTML output containing Indonesian headline")
 	}
+
+	termOut := receipt.RenderTerminal(sealed, htmlPath, "id", false)
+	if !strings.Contains(termOut, "[AMAN DITES]") || !strings.Contains(termOut, "01. Kasir, Kunci Data") {
+		t.Fatalf("expected 74-col Indonesian terminal ledger, got:\n%s", termOut)
+	}
+
+	mdOut := receipt.RenderMarkdown(sealed, htmlPath, "id")
+	if !strings.Contains(mdOut, "Buka Lembar Pemeriksaan Lengkap") || !strings.Contains(mdOut, "file://") {
+		t.Fatalf("expected AI harness markdown summary with file:// link, got:\n%s", mdOut)
+	}
 }

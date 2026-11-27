@@ -51,7 +51,7 @@ func printUsage() {
 
 Usage:
   axoproof init       [--dir <path>]
-  axoproof verify     [--dir <path>] [--claims <path>] [--lang en|id] [--sync-axoloom] [--open] [--json]
+  axoproof verify     [--dir <path>] [--claims <path>] [--lang en|id] [--format table|markdown|json] [--sync-axoloom] [--open]
   axoproof check-seal [--dir <path>] [<receipt.json>]
   axoproof version`)
 }
@@ -74,10 +74,11 @@ func runVerify(args []string) {
 	dir := fs.String("dir", ".", "Workspace directory to verify")
 	claimsPath := fs.String("claims", "", "Optional path to claims.json")
 	lang := fs.String("lang", "en", "Default receipt display language (en or id)")
+	format := fs.String("format", "table", "Output format: table (CLI/Termux), markdown (AI Harness chat), or json")
 	syncAxo := fs.Bool("sync-axoloom", false, "Write sealed verification outcome back to Axoloom handoff memory")
-	openBrowser := fs.Bool("open", false, "Open generated RECEIPT.html in default browser")
+	openBrowser := fs.Bool("open", false, "Explicitly open RECEIPT.html in desktop browser (off by default)")
 	allowRemote := fs.Bool("allow-remote-probe", false, "Allow HTTP probes against non-loopback staging URLs")
-	asJSON := fs.Bool("json", false, "Print full sealed receipt JSON to stdout")
+	asJSON := fs.Bool("json", false, "Shorthand for --format json")
 	_ = fs.Parse(args)
 
 	absDir, err := filepath.Abs(*dir)
@@ -136,7 +137,7 @@ func runVerify(args []string) {
 		}
 	}
 
-	sealedRec, jsonPath, htmlPath, err := receipt.WriteArtifacts(absDir, rec, strings.ToLower(*lang))
+	sealedRec, _, htmlPath, err := receipt.WriteArtifacts(absDir, rec, strings.ToLower(*lang))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "write receipt artifacts: %v\n", err)
 		os.Exit(1)
@@ -146,18 +147,19 @@ func runVerify(args []string) {
 		openInBrowser(htmlPath)
 	}
 
+	outFormat := strings.ToLower(strings.TrimSpace(*format))
 	if *asJSON {
+		outFormat = "json"
+	}
+
+	switch outFormat {
+	case "json":
 		enc, _ := json.MarshalIndent(sealedRec, "", "  ")
 		fmt.Println(string(enc))
-	} else {
-		fmt.Printf("AxoProof Verdict : %s\n", sealedRec.Verdict)
-		fmt.Printf("Summary (EN)     : %s\n", sealedRec.HeadlineEN)
-		fmt.Printf("Ringkasan (ID)   : %s\n", sealedRec.HeadlineID)
-		fmt.Printf("Findings         : %d fatal business risks | %d customer-polish warnings | %d runtime probes\n",
-			len(sealedRec.FatalRisks), len(sealedRec.PolishWarnings), len(sealedRec.RuntimeProbes))
-		fmt.Printf("Sealed HTML      : %s\n", htmlPath)
-		fmt.Printf("Sealed JSON      : %s\n", jsonPath)
-		fmt.Printf("SHA-256 Seal     : %s\n", sealedRec.SealSHA256)
+	case "markdown", "md":
+		fmt.Print(receipt.RenderMarkdown(sealedRec, htmlPath, *lang))
+	default:
+		fmt.Print(receipt.RenderTerminal(sealedRec, htmlPath, *lang, receipt.IsStdoutTTY()))
 	}
 
 	if sealedRec.Verdict == model.VerdictHoldRelease {

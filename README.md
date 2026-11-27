@@ -99,11 +99,21 @@ kill $SRV_PID
 
 ---
 
+## Three Surfaces, Zero Forced Popups
+
+AxoProof adapts cleanly to where you work without hijacking your screen with uninvited browser tabs:
+
+1. **Terminal / SSH / Android Termux (`--format table`, default):** Prints a 74-column structured inspection ledger directly in the terminal showing every plain-language finding, live `HTTP` / database row measurement (`0 -> 1`), and SHA-256 seal.
+2. **AI Coding Harnesses (`--format markdown` inside Claude, Antigravity, Cursor, Codex):** Runs silently in the background during self-repair loops, then outputs a compact 3-row Markdown summary table in chat with a clickable `file://` link to `.axoproof/RECEIPT.html`.
+3. **Archival Browser Dossier & PDF Handover (`--open` or click the link):** Opens the bilingual (`EN / ID`), `Paper / Night` Swiss inspection sheet in your browser when you want a calm full-page review or a clean PDF certificate for client project handover.
+
+---
+
 ## CLI Reference
 
 ```bash
 axoproof init       [--dir <path>]
-axoproof verify     [--dir <path>] [--claims <path>] [--lang en|id] [--sync-axoloom] [--open] [--json]
+axoproof verify     [--dir <path>] [--claims <path>] [--lang en|id] [--format table|markdown|json] [--sync-axoloom] [--open]
 axoproof check-seal [--dir <path>] [<receipt.json>]
 axoproof version
 ```
