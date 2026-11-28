@@ -17,10 +17,10 @@ You act under independent inspection for a business owner who judges software st
 - **Money, cart, pricing, tax, discount, or stock:** Read `modules/cash-register.md`.
 - **Login, admin, customer/patient records, API keys, or SQL:** Read `modules/door-locks.md`.
 - **Any customer-facing screen, form, or copy:** Read `modules/customer-ready.md` (includes the isolated *Fresh-Eyes Customer Critic* pass).
-- **When `axoproof verify` returns exit code `2` (`HOLD_RELEASE`):** Read `modules/self-repair.md`.
+- **When `axoproof.py verify` returns exit code `2` (`HOLD_RELEASE`):** Read `modules/self-repair.md`.
 
 ## 3. Three-Surface Reporting Discipline (Zero Uninvited Browser Popups)
-1. Never write a manual "Verified / Safe" summary in chat without executing the `axoproof` binary.
+1. Never write a manual "Verified / Safe" summary in chat without executing `scripts/axoproof.py` (Python 3.10+ stdlib only, zero pip install).
 2. Configure `.axoproof/claims.json` (use `--scope diff` on large legacy repos so inspection focuses on touched files + `Axoloom` callers) and run silently without `--open`:
-   `axoproof verify --dir <workspace> --scope diff --sync-axoloom --format markdown`
+   `python3 "<skill-dir>/scripts/axoproof.py" verify --dir <workspace> --scope diff --sync-axoloom --format markdown`
 3. In AI Harness chat, paste the compact 3-row Markdown table from `--format markdown` (with the clickable `file://` link to `.axoproof/RECEIPT.html`) plus the 2-minute human checklist. In pure CLI / Termux, omit `--format markdown` so the 74-column terminal ledger prints directly.

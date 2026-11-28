@@ -8,19 +8,20 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
+      - name: Set up Python ${{ matrix.python-version }} (stdlib only, zero pip install)
+        uses: actions/setup-python@v5
         with:
-          go-version: "1.26.x"
+          python-version: ${{ matrix.python-version }}
 
-      - name: Vet, Race Tests & Zero-CGo Build
+      - name: Run Unit Tests & Live Sabotage-vs-Verified Demo
         run: |
-          CGO_ENABLED=0 go vet ./...
-          CGO_ENABLED=0 go test ./...
-          CGO_ENABLED=1 go test -race ./...
-          CGO_ENABLED=0 go build -o /tmp/axoproof ./cmd/axoproof
-          /tmp/axoproof version
+          python3 scripts/axoproof.py version
+          python3 -m unittest discover -s tests -v
+          python3 scripts/axoproof.py demo

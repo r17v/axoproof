@@ -16,4 +16,4 @@ Customer-facing pages must look and read like a real human business built them, 
 | Fake `info@example.com`, `+1 (555) 0199`, `Lorem ipsum`, `href="#"`, or made-up `"10,000+ users"` | Use verified business contacts/numbers from `Axoloom` vault, or ask the owner before publishing. |
 
 ## 3. Mandatory Fresh-Eyes Customer Critic Pass
-Before running final `axoproof verify` on a customer-facing screen, launch one isolated read-only subagent (or dedicated review pass) prompted strictly as a skeptical first-time buyer reading ONLY the rendered screen text to strip stiff phrasing.
+Before running final `python3 "<skill-dir>/scripts/axoproof.py" verify` on a customer-facing screen, launch one isolated read-only subagent (or dedicated review pass) prompted strictly as a skeptical first-time buyer reading ONLY the rendered screen text to strip stiff phrasing.

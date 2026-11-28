@@ -4,124 +4,149 @@
 
 <h3 align="center">
   Independent Runtime Proof, Money/Privacy Inspector, Structural Anti-Slop Filter,<br>
-  and SHA-256 Sealed Owner Receipt for AI Coding Agents.
+  and SHA-256 Sealed Owner Receipt Skill for AI Coding Agents.
 </h3>
 
 <p align="center">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-5C45B9.svg" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/Go-1.26%2B_Pure_Zero--CGo-00ADD8.svg" alt="Pure Go Zero CGo">
-  <img src="https://img.shields.io/badge/Skill-1_Door_%2B_6_Auto_Modules-10b981.svg" alt="1 Door Skill + 6 Modules">
-  <a href="https://github.com/r17v/axoloom"><img src="https://img.shields.io/badge/Axoloom-2--Way_Graph_Bridge-d97706.svg" alt="Axoloom Compatible"></a>
+  <img src="https://img.shields.io/badge/Python-3.10%2B_Stdlib_Only-3776AB.svg" alt="Python 3.10+ Stdlib Only">
+  <img src="https://img.shields.io/badge/Dependencies-Zero-10b981.svg" alt="Zero Dependencies">
+  <a href="https://github.com/r17v/axoloom"><img src="https://img.shields.io/badge/Axoloom-2--Way_SQLite_Bridge-d97706.svg" alt="Axoloom Compatible"></a>
 </p>
 
 <p align="center">
-  <img src="assets/showcase/receipt-showcase.png" alt="AxoProof Sealed Bilingual Owner Receipt catching AI placebo behavior and verifying real SQLite row persistence" width="100%">
+  <img src="assets/showcase/receipt-showcase.png" alt="AxoProof Swiss Archival Inspection Dossier catching AI placebo behavior vs verifying real database persistence" width="100%">
 </p>
+
+An Agent Skill and zero-dependency Python 3.10+ standard-library inspector that stops AI coding agents from claiming *"Done! Build passed!"* when buttons are fake, money math uses floats, private API routes are unlocked, or nothing is actually saved to the database. Free, MIT, no signup, no API key, nothing to `pip install`, nothing to compile.
+
+---
+
+## Install
+
+### Universal Agent Skills CLI (`Antigravity`, `Claude Code`, `Cursor`, `Codex`, `Windsurf`)
+
+```bash
+npx skills add r17v/axoproof
+```
+
+### Claude (Paste Link)
+
+Paste this repository link into Claude and say `install skill`:
+
+```text
+https://github.com/r17v/axoproof
+
+install skill
+```
+
+### Claude Code Plugin Marketplace
+
+```text
+/plugin marketplace add r17v/axoproof
+/plugin install axoproof@axoproof
+```
+
+### Direct Git Clone (Global or Project-Local)
+
+```bash
+# Antigravity / Universal ~/.agents/skills
+git clone https://github.com/r17v/axoproof.git ~/.agents/skills/axoproof
+
+# Or Claude Code ~/.claude/skills
+git clone https://github.com/r17v/axoproof.git ~/.claude/skills/axoproof
+```
+
+Requires **Python 3.10 or newer** (standard library only: `sqlite3`, `urllib.request`, `hashlib`, `json`, `subprocess`). Zero external packages.
+
+---
 
 ## Why AxoProof Exists
 
-AI coding agents routinely tell non-technical founders, agency owners, and busy builders *"Done! Build passed!"* while leaving behind hidden landmines:
+An AI coding agent grading its own work has a conflict of interest. Non-technical founders, agency owners, and fast-moving builders routinely get handed fragile facades:
 
-- **Placebo Interfaces:** Buttons that show a green success toast while saving `0` rows to the database, or dashboard cards showing hardcoded sample revenue (`$18,500.00`).
-- **Cash-Register Bugs:** Floating-point rounding errors on currency, negative-quantity exploits (`quantity: -5`), or checkout routes that trust item prices sent directly from the buyer's browser.
-- **Unlocked Customer Doors:** Sensitive `/api/customers` or `/api/orders` endpoints left open without authentication, or secret keys leaked into `NEXT_PUBLIC_*` / `VITE_*` client bundles.
-- **Customer-Screen AI Slop:** Leftover `example.com` contacts, dead `href="#"` links, raw `500` stack traces shown to customers, and stiff brochure cliches.
+- **Placebo Interfaces:** Buttons that show a green success toast while writing `0` rows to the database, `.skip` tests silenced to turn CI green, or dashboard cards displaying hardcoded `$18,500.00` sample figures.
+- **Cash-Register Bugs:** Floating-point rounding drift on currency, negative-quantity exploits (`quantity: -5`), or checkout endpoints trusting item prices sent straight from the buyer's browser.
+- **Unlocked Customer Doors:** Sensitive `/api/customers` or `/api/orders` endpoints exposed without authentication, raw SQL string interpolation, or secret keys leaked into `NEXT_PUBLIC_*` / `VITE_*` client bundles.
+- **Customer-Screen AI Slop:** Leftover `support@example.com` contacts, fabricated `"Trusted by 10,000+ users"` claims, dead `href="#"` links, raw stack traces, and cramped `<44px` mobile buttons.
 
-An AI coding agent grading its own work has a conflict of interest. **AxoProof** separates the **Inspector** from the **Builder**: one thin Agent Skill (`<= 45` lines) activates **6 specialist modules** during coding, and a standalone zero-CGo binary runs counterfactual live HTTP + database probes and stamps a tamper-evident **`.axoproof/RECEIPT.html`** (with instant **English / Bahasa Indonesia** toggle) that the AI cannot forge.
-
----
-
-## Synergy with [Axoloom](https://github.com/r17v/axoloom)
-
-`Axoloom` and `AxoProof` form a closed quality loop across your workspace:
-
-1. **Upstream (`Axoloom` -> `AxoProof`):** Before writing code or copy, the agent loads real business facts, brand voice, and permanent guardrails from `Axoloom` so it never invents generic filler. During verification, `AxoProof` reads `.axoloom/index.db` directly to catch sensitive API routes even if the agent forgot to declare them in `claims.json`.
-2. **Downstream (`AxoProof` -> `Axoloom`):** Running `axoproof verify --sync-axoloom` writes the SHA-256 sealed verification outcome back into `Axoloom` handoff memory so future sessions inherit lessons automatically.
+**AxoProof** separates the **Inspector** from the **Builder**: one compact root `SKILL.md` (`26` lines) progressively loads **6 specialist modules** only when needed, and `scripts/axoproof.py` executes counterfactual live HTTP + database probes before stamping a SHA-256 sealed **`.axoproof/RECEIPT.html`** dossier that the AI cannot forge.
 
 ---
 
-## 1 Skill Entrypoint, 6 Specialist Inspectors Inside
-
-Non-technical owners never need to memorize 10 slash commands. Installing the single `axoproof` skill automatically orchestrates 6 focused modules:
+## 1 Skill Door, 6 Specialist Modules Inside
 
 | Module | What It Guards | Receipt Track |
 | :--- | :--- | :--- |
-| `no-placebo` | Stops empty `onClick` handlers, simulated `setTimeout` saves, hardcoded fake KPI figures, and `.skip` tests | **Fatal Business Risk** |
-| `cash-register` | Enforces integer minor-unit currency (`int64` / `NUMERIC`), server-side price lookup, and negative-quantity rejection | **Fatal Business Risk** |
-| `door-locks` | Verifies authentication on private routes, blocks raw SQL string concatenation, and catches exposed client secrets | **Fatal Business Risk** |
-| `live-persistence` | Counts real database rows before vs after live HTTP requests (`0 -> 1`) instead of trusting `build` logs | **Live Runtime Proof** |
-| `customer-ready` | Catches `example.com` / fake testimonials, dead `#` links, leaked stack traces, brochure slop, `<44px` mobile buttons, plus runs an isolated *Fresh-Eyes Customer Critic* pass | **Customer Polish Track** |
-| `self-repair` | Forces the AI agent to fix `[FATAL]` defects up to 3 rounds autonomously before handing the receipt to the owner | **Autonomous Repair** |
+| `modules/no-placebo.md` | Stops empty `onClick` handlers, simulated `setTimeout` saves, hardcoded fake KPI figures, and `.skip` tests | **Fatal Business Risk** |
+| `modules/cash-register.md` | Enforces integer minor-unit currency (`int64` / `BIGINT` cents / `NUMERIC`), server-side price lookup, and negative-quantity rejection | **Fatal Business Risk** |
+| `modules/door-locks.md` | Verifies authentication on private routes, blocks raw SQL string concatenation, and catches exposed client secrets | **Fatal Business Risk** |
+| `modules/live-persistence.md` | Auto-starts your server, counts real SQLite rows (`0 -> 1`) or verifies Postgres/Supabase HTTP read-back, and checks `375px` mobile DOM renders | **Live Runtime Proof** |
+| `modules/customer-ready.md` | Catches `example.com` / fake social proof, dead `#` links, leaked stack traces, brochure cliches, `<44px` buttons, plus runs an isolated *Fresh-Eyes Customer Critic* pass | **Customer Polish Track** |
+| `modules/self-repair.md` | Forces the AI agent to repair `[BLOCKING]` defects autonomously (up to 3 rounds) before handing the receipt to the owner | **Autonomous Repair** |
 
 ---
 
-## Quick Start
+## Native 2-Way Bridge with [Axoloom](https://github.com/r17v/axoloom)
 
-### 1. Install Binary + Agent Skill
+`Axoloom` (Go/MCP codebase AST + vault engine) and `AxoProof` (Python stdlib runtime verifier) share SQLite natively with zero glue dependencies:
 
-#### macOS (Apple Silicon & Intel) / Linux / Android Termux
+1. **Upstream (`Axoloom` -> `AxoProof`):** Before coding, the agent boots real business facts, brand voice, and permanent guardrails from `Axoloom`. During `verify`, `scripts/axoproof.py` opens `.axoloom/index.db` in read-only SQLite mode to auto-discover sensitive `/api/*` endpoints (even if omitted from `claims.json`) and expand `--scope diff` across 1-hop upstream callers.
+2. **Downstream (`AxoProof` -> `Axoloom`):** Passing `--sync-axoloom` writes the SHA-256 sealed verification summary back into `Axoloom` handoff memory so every future agent session inherits what was proven.
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/r17v/axoproof/main/install.sh | sh
-```
+---
 
-#### Windows 10 / 11 (`x64` & `ARM64` PowerShell)
+## Try the 1-Command Live Demo
 
-```powershell
-irm https://raw.githubusercontent.com/r17v/axoproof/main/install.ps1 | iex
-```
-
-#### Build from Source (`Go 1.26+`, Zero CGo)
+Run a self-contained comparison between a sabotaged vibe-coded store (`HOLD_RELEASE`, catching fake saves, float pricing, unlocked customer orders, and negative-quantity exploits) and a repaired store (`SAFE_TO_TEST`, proving `0 -> 1` SQLite row persistence):
 
 ```bash
-git clone https://github.com/r17v/axoproof.git
-cd axoproof
-CGO_ENABLED=0 go build -o ~/.local/bin/axoproof ./cmd/axoproof
-mkdir -p ~/.agents/skills && cp -R ./skills/axoproof ~/.agents/skills/axoproof
+python3 scripts/axoproof.py demo
 ```
 
-### 2. Try the 1-Command Sabotage vs Verified Demo
-
-AxoProof automatically starts each demo server via `start_command`, probes live HTTP/SQLite persistence + headless mobile `375px` screen rendering, and shuts the server down cleanly:
-
-**Catch 7 blocking AI vibe-coding lies red-handed (`HOLD_RELEASE`):**
+Pass `--open` if you want to inspect the generated Swiss archival `.axoproof/RECEIPT.html` dossier (with instant **EN / ID** and **Paper / Night** switches) in your browser:
 
 ```bash
-./axoproof verify --dir ./examples/sabotaged-checkout || true
-```
-
-**Verify the repaired store passing all live DB, auth, tamper, and mobile screen probes (`SAFE_TO_TEST`):**
-
-```bash
-./axoproof verify --dir ./examples/verified-checkout
+python3 scripts/axoproof.py demo --open
 ```
 
 ---
 
-## Three Surfaces, Zero Forced Popups
+## Three Output Surfaces, Zero Uninvited Browser Popups
 
-AxoProof adapts cleanly to where you work without hijacking your screen with uninvited browser tabs:
-
-1. **Terminal / SSH / Android Termux (`--format table`, default):** Prints a 74-column structured inspection ledger directly in the terminal showing every plain-language finding, live `HTTP` / database row measurement (`0 -> 1`), and SHA-256 seal.
-2. **AI Coding Harnesses (`--format markdown` inside Claude, Antigravity, Cursor, Codex):** Runs silently in the background during self-repair loops, then outputs a compact 3-row Markdown summary table in chat with a clickable `file://` link to `.axoproof/RECEIPT.html`.
-3. **Archival Browser Dossier & PDF Handover (`--open` or click the link):** Opens the bilingual (`EN / ID`), `Paper / Night` Swiss inspection sheet in your browser when you want a calm full-page review or a clean PDF certificate for client project handover.
+1. **Terminal / SSH / Termux (`--format table`, default):** Prints a 74-column structured inspection ledger directly in stdout with plain-language findings, live HTTP/database measurements, and SHA-256 seal.
+2. **AI Coding Harnesses (`--format markdown`):** Emits a compact 3-row Markdown table with a clickable `file://` link to `.axoproof/RECEIPT.html` so chat stays clean and token-lean.
+3. **Archival Browser Dossier (`--open` or click the link):** Opens the Swiss editorial inspection sheet with 1-click **"Copy AI repair brief"** and clean print/PDF handover layout.
 
 ---
 
 ## CLI Reference
 
 ```bash
-axoproof init       [--dir <path>]
-axoproof verify     [--dir <path>] [--claims <path>] [--scope all|diff] [--lang en|id] [--format table|markdown|json] [--sync-axoloom] [--open]
-axoproof check-seal [--dir <path>] [<receipt.json>]
-axoproof version
+python3 scripts/axoproof.py init       [--dir <path>]
+python3 scripts/axoproof.py verify     [--dir <path>] [--claims <path>] [--scope all|diff] [--lang en|id] [--format table|markdown|json] [--sync-axoloom] [--open]
+python3 scripts/axoproof.py check-seal [--dir <path>] [<receipt.json>]
+python3 scripts/axoproof.py demo       [--open]
+python3 scripts/axoproof.py version
 ```
 
 - Exit code `0`: `SAFE_TO_TEST` or `LOCAL_ONLY_MANUAL_CHECK`
-- Exit code `2`: `HOLD_RELEASE` (blocks premature agent completion or CI merge; tamper check failed)
+- Exit code `2`: `HOLD_RELEASE` (blocks premature agent completion or CI merge; also returned when seal verification detects tampering)
 
----
+## Repository Layout
+
+```text
+axoproof/
+├── SKILL.md                  # 26-line progressive-disclosure entrypoint
+├── modules/                  # 6 on-demand specialist inspection protocols
+├── scripts/
+│   └── axoproof.py           # Zero-dependency Python 3.10+ stdlib engine
+├── tests/
+│   └── test_axoproof.py      # Counterfactual probe, scanner, bridge & seal tests
+├── assets/                   # Brand vectors & Swiss dossier showcase
+└── .claude-plugin/           # Claude Code marketplace metadata
+```
 
 ## License
 
-Licensed under the [MIT License](./LICENSE). Third-party attributions are documented in [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md).
+MIT License. See [LICENSE](./LICENSE).

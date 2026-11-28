@@ -1,0 +1,21 @@
+{
+  "name": "axoproof",
+  "description": "Independent runtime proof, money/privacy safety inspector, structural anti-slop filter, and SHA-256 sealed plain-language Owner Receipt engine built for non-IT founders, agencies, and AI coding agents. Free, MIT, zero dependencies.",
+  "version": "0.2.0",
+  "author": {
+    "name": "r17v",
+    "url": "https://github.com/r17v"
+  },
+  "homepage": "https://github.com/r17v/axoproof",
+  "repository": "https://github.com/r17v/axoproof",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "agent-skills",
+    "verification",
+    "runtime-proof",
+    "anti-slop",
+    "axoloom",
+    "quality-gate"
+  ]
+}

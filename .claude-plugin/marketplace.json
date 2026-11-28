@@ -1,0 +1,18 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "axoproof",
+  "description": "Independent runtime proof, money/privacy inspector, structural anti-slop filter, and SHA-256 sealed Owner Receipt skill for AI coding agents.",
+  "owner": {
+    "name": "r17v",
+    "url": "https://github.com/r17v"
+  },
+  "plugins": [
+    {
+      "name": "axoproof",
+      "description": "Independent runtime proof, money/privacy inspector, structural anti-slop filter, and SHA-256 sealed Owner Receipt skill for AI coding agents. Free, MIT, Python 3.10+ stdlib only.",
+      "source": "./",
+      "category": "quality",
+      "homepage": "https://github.com/r17v/axoproof"
+    }
+  ]
+}
